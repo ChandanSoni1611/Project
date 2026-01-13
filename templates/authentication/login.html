@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log in - Smile Clinic</title>
+<style> 
+    body {
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        background-color: #000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        color: white;
+    }
+    .logo {
+        font-size: 20px;
+        font-weight: bold;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: white;
+        text-decoration: none;
+    }
+    .logo:hover {
+        color: #3366ff;
+    }
+    .container {
+        max-width: 350px;
+        width: 100%;
+        text-align: center;
+    }
+    h2 {
+        margin-bottom: 20px;
+    }
+    .input-group {
+        position: relative;
+        margin-bottom: 15px;
+    }
+    .input-group input {
+        width: 92%;
+        padding: 14px;
+        padding-top: 20px;
+        border: 1px solid #c4c4c4;
+        border-radius: 25px;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.3s;
+    }
+    .input-group label {
+        position: absolute;
+        top: 50%;
+        left: 15px;
+        transform: translateY(-50%);
+        color: #777;
+        font-size: 14px;
+        pointer-events: none;
+        transition: all 0.2s ease;
+        background-color: #f9f9f9;
+        padding: 0 5px;
+    }
+    .input-group input:focus {
+        border-color: #3366ff;
+    }
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label {
+        top: 1.5px;
+        font-size: 12px;
+        color: #3366ff;
+    }
+    button.continue {
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        width: 100%;
+        padding: 15px;
+        border: none;
+        background-color: white;
+        color: #000;
+        font-size: 14px;
+        border-radius: 25px;
+        cursor: pointer;
+        margin-bottom: 20px;
+        transition: opacity 0.3s;
+    }
+    button.continue:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+    p {
+        font-size: 14px;
+    }
+    p a {
+        color: #3366ff;
+        text-decoration: none;
+    }
+    p a:hover {
+        text-decoration: underline;
+    }
+    .divider {
+        display: flex;
+        align-items: center;
+        margin: 20px 0;
+    }
+    .divider::before,
+    .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background-color: #ddd;
+    }
+    .divider span {
+        margin: 0 10px;
+        color: #555;
+        font-size: 14px;
+    }
+    .social-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 25px;
+        margin-bottom: 10px;
+        background-color: white;
+        font-size: 14px;
+        cursor: pointer;
+        color: #000;
+        transition: background-color 0.3s;
+    }
+    .social-btn:hover {
+        background-color: #f0f0f0;
+    }
+    .social-btn img {
+        width: 18px;
+        margin-right: 10px;
+    }
+    .error-message {
+        background-color: #ff4444;
+        color: white;
+        padding: 10px;
+        border-radius: 15px;
+        margin-bottom: 15px;
+        font-size: 14px;
+        display: none;
+    }
+    footer {
+        position: absolute;
+        bottom: 10px;
+        font-size: 12px;
+        color: #555;
+    }
+    footer a {
+        color: #555;
+        text-decoration: none;
+        margin: 0 5px;
+    }
+    footer a:hover {
+        color: #3366ff;
+    }
+</style>
+</head>
+<body>
+    <a href="/" class="logo">Smile Clinic</a>
+    <div class="container">
+        <h2>Welcome Back</h2>
+
+        <div class="error-message" id="error-message"></div>
+
+        <form id="login-form">
+            <div class="input-group">
+                <input type="email" id="email" placeholder=" " required autocomplete="email">
+                <label for="email">Email Address</label>
+            </div>
+
+            <!-- Password field - initially hidden -->
+            <div class="input-group" id="password-group" style="display: none;">
+                <input type="password" id="password" placeholder=" " autocomplete="current-password">
+                <label for="password">Password</label>
+            </div>
+
+            <button class="continue" id="continue-btn" type="button">Continue</button>
+        </form>
+        
+        <p>Don't have an account? <a href="/signup">Signup</a></p>
+
+        <div class="divider"><span>OR</span></div>
+
+        <div class="social-btn" id="google-btn">
+            <img src="https://img.icons8.com/color/48/google-logo.png" alt="Google"/>
+            Continue with Google
+        </div>
+        
+    </div>
+
+    <footer>
+        <a href="#">Terms of Use</a> | <a href="#">Privacy Policy</a>
+    </footer>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
+    import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAjNK9sUByYR6cJvuqmiZWvsd47cMKV_lU",
+        authDomain: "dyexdect.firebaseapp.com",
+        databaseURL: "https://dyexdect-default-rtdb.firebaseio.com",
+        projectId: "dyexdect",
+        storageBucket: "dyexdect.firebasestorage.app",
+        messagingSenderId: "749021614757",
+        appId: "1:749021614757:web:8c3b027d88010bc4dd334c",
+        measurementId: "G-5734WM4M2B"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+
+    // Set persistence to LOCAL
+    setPersistence(auth, browserLocalPersistence);
+
+    const continueBtn = document.getElementById('continue-btn');
+    const emailInput = document.getElementById('email');
+    const passwordGroup = document.getElementById('password-group');
+    const passwordInput = document.getElementById('password');
+    const errorMessage = document.getElementById('error-message');
+    const loginForm = document.getElementById('login-form');
+
+    let isPasswordStep = false;
+
+    // Prevent form submission
+    loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+    });
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+        setTimeout(() => {
+            errorMessage.style.display = 'none';
+        }, 5000);
+    }
+
+    // Main continue button handler
+    continueBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        console.log('Continue clicked, isPasswordStep:', isPasswordStep);
+        
+        if (!isPasswordStep) {
+            // STEP 1: Email validation
+            const email = emailInput.value.trim();
+            console.log('Email entered:', email);
+            
+            if (email === "") {
+                showError("Please enter your email address");
+                return;
+            }
+            
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError("Please enter a valid email address");
+                return;
+            }
+            
+            // Show password field
+            console.log('Showing password field');
+            passwordGroup.style.display = 'block';
+            emailInput.readOnly = true;  // ✅ Changed from disabled to readOnly
+            continueBtn.textContent = "Log In";
+            isPasswordStep = true;
+            passwordInput.focus();
+            
+        } else {
+            // STEP 2: Password validation and login
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            console.log('Attempting login with email:', email);
+            
+            if (password === "") {
+                showError("Please enter your password");
+                return;
+            }
+            
+            if (password.length < 6) {
+                showError("Password must be at least 6 characters");
+                return;
+            }
+
+            continueBtn.disabled = true;
+            continueBtn.textContent = "Logging in...";
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    console.log("✅ Login successful:", userCredential.user);
+                    localStorage.setItem('userEmail', userCredential.user.email);
+                    localStorage.setItem('userName', userCredential.user.displayName || userCredential.user.email.split('@')[0]);
+                    
+                    // Redirect to home
+                    window.location.href = "/";
+                })
+                .catch((error) => {
+                    console.error("❌ Login error:", error);
+                    let errorMsg = "Login failed. Please try again.";
+                    
+                    if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                        errorMsg = "Incorrect password. Please try again.";
+                    } else if (error.code === 'auth/user-not-found') {
+                        errorMsg = "No account found with this email.";
+                    } else if (error.code === 'auth/invalid-email') {
+                        errorMsg = "Invalid email address.";
+                    } else if (error.code === 'auth/too-many-requests') {
+                        errorMsg = "Too many failed attempts. Please try again later.";
+                    }
+                    
+                    showError(errorMsg);
+                    continueBtn.disabled = false;
+                    continueBtn.textContent = "Log In";
+                });
+        }
+    });
+
+    // Enter key handlers
+    emailInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            continueBtn.click();
+        }
+    });
+
+    passwordInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            continueBtn.click();
+        }
+    });
+
+    // Google login
+    const googleBtn = document.getElementById('google-btn');
+    const googleProvider = new GoogleAuthProvider();
+
+    googleBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        console.log('Google login clicked');
+        
+        googleBtn.style.opacity = '0.6';
+        googleBtn.style.pointerEvents = 'none';
+
+        signInWithPopup(auth, googleProvider)
+            .then((result) => {
+                console.log("✅ Google login successful:", result.user);
+                localStorage.setItem('userEmail', result.user.email);
+                localStorage.setItem('userName', result.user.displayName || result.user.email.split('@')[0]);
+                window.location.href = "/";
+            })
+            .catch((error) => {
+                console.error("❌ Google login error:", error);
+                showError("Google login failed: " + error.message);
+                googleBtn.style.opacity = '1';
+                googleBtn.style.pointerEvents = 'auto';
+            });
+    });
+</script>
+
+</body>
+</html>

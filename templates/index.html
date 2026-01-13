@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dyslexia Screnning - Dyslexia Assessment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Google Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
+            min-height: 100vh;
+            height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* Navigation Bar */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 48px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: rgba(227, 242, 253, 0);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+        }
+
+        nav.scrolled {
+            background: rgba(227, 242, 253, 0.7);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        nav.on-news-section {
+            background: rgba(243, 229, 245, 0.7);
+            box-shadow: 0 1px 3px rgba(123, 31, 162, 0.08);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Hamburger Menu Button */
+        .menu-btn {
+            width: 36px;
+            height: 36px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .menu-btn:hover {
+            background: rgba(25, 118, 210, 0.1);
+        }
+
+        .menu-btn span {
+            width: 20px;
+            height: 2px;
+            background: #1976d2;
+            transition: all 0.3s;
+        }
+
+        /* Sidebar Menu */
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            width: 300px;
+            height: 100vh;
+            background: linear-gradient(180deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2000;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 24px rgba(25, 118, 210, 0.15);
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar.on-news-section {
+            background: linear-gradient(180deg, #f3e5f5 0%, #e1bee7 50%, #ce93d8 100%);
+            box-shadow: 4px 0 24px rgba(123, 31, 162, 0.15);
+        }
+
+        .sidebar-header {
+            padding: 20px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(25, 118, 210, 0.15);
+            transition: border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar.on-news-section .sidebar-header {
+            border-bottom-color: rgba(123, 31, 162, 0.15);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1976d2;
+            font-size: 17px;
+            font-weight: 600;
+            transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar.on-news-section .sidebar-logo {
+            color: #7b1fa2;
+        }
+
+        .sidebar-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar.on-news-section .sidebar-logo-icon {
+            background: linear-gradient(135deg, #7b1fa2 0%, #9c27b0 100%);
+            box-shadow: 0 2px 8px rgba(123, 31, 162, 0.3);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #1976d2;
+            font-size: 22px;
+            cursor: pointer;
+            line-height: 1;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 6px 10px;
+            border-radius: 6px;
+        }
+
+        .sidebar.on-news-section .close-btn {
+            color: #7b1fa2;
+        }
+
+        .close-btn:hover {
+            color: #1565c0;
+            background: rgba(25, 118, 210, 0.1);
+            transform: rotate(90deg);
+        }
+
+        .sidebar.on-news-section .close-btn:hover {
+            color: #6a1b9a;
+            background: rgba(123, 31, 162, 0.1);
+        }
+
+        .sidebar-menu {
+            padding: 16px 12px;
+            flex: 1;
+        }
+
+        .menu-item {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #1976d2;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 10px;
+            margin-bottom: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar.on-news-section .menu-item {
+            color: #7b1fa2;
+        }
+
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: #1565c0;
+            transform: scaleY(0);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar.on-news-section .menu-item::before {
+            background: #6a1b9a;
+        }
+
+        .menu-item:hover {
+            background: rgba(25, 118, 210, 0.15);
+            transform: translateX(4px);
+            color: #1565c0;
+        }
+
+        .sidebar.on-news-section .menu-item:hover {
+            background: rgba(123, 31, 162, 0.15);
+            color: #6a1b9a;
+        }
+
+        .menu-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .menu-item svg,
+        .menu-item span:first-child {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .menu-item:hover svg,
+        .menu-item:hover span:first-child {
+            transform: scale(1.1);
+        }
+
+        .menu-divider {
+            height: 1px;
+            background: rgba(25, 118, 210, 0.2);
+            margin: 12px 0;
+            transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar.on-news-section .menu-divider {
+            background: rgba(123, 31, 162, 0.2);
+        }
+
+        /* History Section Styles */
+        .history-section {
+            display: none;
+            margin-top: 8px;
+        }
+
+        .history-section.visible {
+            display: block;
+        }
+
+        .history-header {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #1976d2;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 10px;
+            margin-bottom: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar.on-news-section .history-header {
+            color: #7b1fa2;
+        }
+
+        .history-header::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: #1565c0;
+            transform: scaleY(0);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar.on-news-section .history-header::before {
+            background: #6a1b9a;
+        }
+
+        .history-header:hover {
+            background: rgba(25, 118, 210, 0.15);
+            transform: translateX(4px);
+            color: #1565c0;
+        }
+
+        .sidebar.on-news-section .history-header:hover {
+            background: rgba(123, 31, 162, 0.15);
+            color: #6a1b9a;
+        }
+
+        .history-header:hover::before {
+            transform: scaleY(1);
+        }
+
+        .history-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .history-title svg,
+        .history-title span:first-child {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .history-header:hover .history-title svg,
+        .history-header:hover .history-title span:first-child {
+            transform: scale(1.1);
+        }
+
+        .history-arrow {
+            font-size: 12px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #1976d2;
+        }
+
+        .sidebar.on-news-section .history-arrow {
+            color: #7b1fa2;
+        }
+
+        .history-arrow.expanded {
+            transform: rotate(180deg);
+        }
+
+        .history-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .history-content.expanded {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .history-list {
+            padding: 4px 0;
+        }
+
+        .history-item {
+            padding: 12px 16px 12px 50px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #1976d2;
+            font-size: 13px;
+            border-radius: 10px;
+            margin-bottom: 3px;
+            position: relative;
+        }
+
+        .sidebar.on-news-section .history-item {
+            color: #7b1fa2;
+        }
+
+        .history-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: #1565c0;
+            transform: scaleY(0);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar.on-news-section .history-item::before {
+            background: #6a1b9a;
+        }
+
+        .history-item:hover {
+            background: rgba(25, 118, 210, 0.12);
+            color: #1565c0;
+            transform: translateX(4px);
+        }
+
+        .sidebar.on-news-section .history-item:hover {
+            background: rgba(123, 31, 162, 0.12);
+            color: #6a1b9a;
+        }
+
+        .history-item-content {
+            flex: 1;
+        }
+
+        .history-item-title {
+            font-weight: 500;
+            color: #1976d2;
+            margin-bottom: 4px;
+            font-size: 13px;
+            transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar.on-news-section .history-item-title {
+            color: #7b1fa2;
+        }
+
+        .history-item:hover .history-item-title {
+            color: #1565c0;
+        }
+
+        .sidebar.on-news-section .history-item:hover .history-item-title {
+            color: #6a1b9a;
+        }
+
+        .history-item-date {
+            font-size: 11px;
+            color: #64b5f6;
+            transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar.on-news-section .history-item-date {
+            color: #ba68c8;
+        }
+
+        .history-item-score {
+            font-size: 11px;
+            color: #1565c0;
+            font-weight: 500;
+            margin-top: 2px;
+            transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar.on-news-section .history-item-score {
+            color: #6a1b9a;
+        }
+
+        .no-history {
+            padding: 20px 16px;
+            text-align: center;
+            color: #64b5f6;
+            font-size: 13px;
+            font-weight: 400;
+            transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar.on-news-section .no-history {
+            color: #ba68c8;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1999;
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .overlay.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 500;
+            color: #1976d2;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: #1976d2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .nav-links {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 6px 8px;
+            border-radius: 50px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        nav.scrolled .nav-links {
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #1976d2;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 14px;
+            padding: 8px 20px;
+            border-radius: 50px;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            background: rgba(25, 118, 210, 0.12);
+            color: #1565c0;
+            transform: scale(1.05);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 20px;
+            height: 2px;
+            background: #1976d2;
+            border-radius: 2px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-links a:hover::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        .login-btn {
+            background: rgba(25, 118, 210, 0.15);
+            color: #1976d2;
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .login-btn:hover {
+            background: rgba(25, 118, 210, 0.25);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.2);
+        }
+
+        /* User Profile Section */
+        .user-profile {
+            position: relative;
+            display: none;
+            margin-left: auto;
+        }
+
+        .user-profile.active {
+            display: block;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4);
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            min-width: 200px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .user-dropdown.active {
+            display: block;
+        }
+
+        .user-info {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: #1976d2;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: #666;
+            font-weight: 400;
+        }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            color: #333;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(25, 118, 210, 0.05);
+        }
+
+        .dropdown-item:last-child {
+            border-top: 1px solid #e0e0e0;
+            color: #d32f2f;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 12px;
+            margin-left: auto;
+        }
+
+        .auth-buttons.hidden {
+            display: none;
+        }
+
+        /* Login Popup Modal */
+        .login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+
+        .login-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 36px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-40px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .modal-content h2 {
+            color: #1976d2;
+            font-size: 24px;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .modal-content p {
+            color: #666;
+            font-size: 15px;
+            margin-bottom: 24px;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 10px 28px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        .modal-btn.primary {
+            background: #1976d2;
+            color: white;
+        }
+
+        .modal-btn.primary:hover {
+            background: #1565c0;
+        }
+
+        .modal-btn.secondary {
+            background: rgba(25, 118, 210, 0.1);
+            color: #1976d2;
+        }
+
+        .modal-btn.secondary:hover {
+            background: rgba(25, 118, 210, 0.15);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 48px 80px;
+            max-width: 1000px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        /* News Section */
+        .news-section {
+            width: 100%;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #f3e5f5 0%, #e1bee7 50%, #ce93d8 100%);
+            padding: 80px 48px;
+            margin-top: 0;
+        }
+
+        .news-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .news-header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .news-header h2 {
+            font-size: 42px;
+            color: #7b1fa2;
+            font-weight: 400;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .news-header p {
+            font-size: 16px;
+            color: #6a1b9a;
+            font-weight: 400;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .news-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .news-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(123, 31, 162, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .news-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #e1bee7 0%, #ce93d8 100%);
+        }
+
+        .news-content {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .news-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #7b1fa2;
+            margin-bottom: 12px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-description {
+            font-size: 14px;
+            color: #6a1b9a;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #9c27b0;
+            padding-top: 12px;
+            border-top: 1px solid rgba(123, 31, 162, 0.1);
+        }
+
+        .news-source {
+            font-weight: 500;
+        }
+
+        .news-time {
+            color: #ba68c8;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 40px;
+            color: #7b1fa2;
+            font-size: 16px;
+        }
+
+        .news-error {
+            text-align: center;
+            padding: 40px;
+            color: #6a1b9a;
+            font-size: 16px;
+        }
+
+        .content-center {
+            text-align: center;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .content-center h1 {
+            font-size: 48px;
+            color: #1976d2;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            font-weight: 400;
+            letter-spacing: -0.5px;
+        }
+
+        .content-center p {
+            font-size: 18px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 36px;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+        }
+
+        .get-started-btn {
+            background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
+            color: white;
+            padding: 14px 36px;
+            border-radius: 24px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            display: inline-block;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(25, 118, 210, 0.3);
+        }
+
+        .get-started-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(25, 118, 210, 0.4);
+        }
+
+        .get-started-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Features Section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-top: 64px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 28px 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.75);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .feature-title {
+            font-size: 17px;
+            font-weight: 500;
+            color: #1976d2;
+            margin-bottom: 8px;
+        }
+
+        .feature-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            nav {
+                padding: 12px 24px;
+            }
+
+            .nav-links {
+                gap: 2px;
+                padding: 4px 6px;
+            }
+
+            .nav-links a {
+                padding: 6px 16px;
+                font-size: 13px;
+            }
+
+            .main-content {
+                padding: 100px 24px 60px;
+            }
+
+            .content-center h1 {
+                font-size: 40px;
+            }
+
+            .content-center p {
+                font-size: 16px;
+            }
+
+            .features {
+                margin-top: 48px;
+            }
+
+            .news-section {
+                padding: 60px 24px;
+            }
+
+            .news-header h2 {
+                font-size: 36px;
+            }
+
+            .news-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 12px 16px;
+            }
+
+            .nav-links {
+                display: none !important;
+            }
+
+            .main-content {
+                padding: 80px 16px 40px;
+            }
+
+            .content-center h1 {
+                font-size: 32px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-buttons {
+                flex-direction: row;
+                gap: 8px;
+            }
+
+            .login-btn {
+                padding: 7px 16px;
+                font-size: 13px;
+            }
+
+            .modal-content {
+                padding: 28px 20px;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+            }
+
+            .modal-btn {
+                width: 100%;
+            }
+
+            .sidebar {
+                width: 280px;
+                left: -280px;
+            }
+
+            .news-section {
+                padding: 40px 16px;
+            }
+
+            .news-header h2 {
+                font-size: 28px;
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+/* Footer */
+.app-footer {
+    background: #0f1419;
+    color: #9aa4ad;
+    padding: 60px 48px;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+/* Left side */
+.footer-left {
+    max-width: 380px;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.logo-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.logo-bars span {
+    width: 16px;
+    height: 3px;
+    background: linear-gradient(90deg, #7c9cff, #5e7cff);
+    border-radius: 2px;
+}
+
+.logo-text {
+    font-size: 20px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.footer-desc {
+    font-size: 14px;
+    margin-bottom: 16px;
+    line-height: 1.6;
+}
+
+.footer-copy {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+/* Right side links */
+.footer-links {
+    display: flex;
+    gap: 80px;
+    flex-wrap: wrap;
+}
+
+.footer-col h4 {
+    font-size: 14px;
+    color: #ffffff;
+    margin-bottom: 14px;
+    font-weight: 600;
+}
+
+.footer-col a {
+    display: block;
+    text-decoration: none;
+    color: #9aa4ad;
+    font-size: 14px;
+    margin-bottom: 10px;
+    transition: color 0.2s ease;
+}
+
+.footer-col a:hover {
+    color: #ffffff;
+}
+
+.signup-btn {
+    display: inline-block;
+    background: #5e7cff;
+    color: #ffffff !important;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 6px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .footer-links {
+        gap: 40px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <!-- Sidebar Menu -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <span>Dyslexia Screnning</span>
+            </div>
+            <button class="close-btn" onclick="toggleSidebar()">✕</button>
+        </div>
+        <div class="sidebar-menu">
+            <a href="#home" class="menu-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span>Home</span>
+            </a>
+
+            <a href="#about" class="menu-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <span>About</span>
+            </a>
+            
+            <div class="menu-divider"></div>
+            
+            <!-- History Section - Only visible when logged in -->
+            <div class="history-section" id="historySection">
+                <div class="history-header" onclick="toggleHistory()">
+                    <div class="history-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                        <span>History</span>
+                    </div>
+                    <div class="history-arrow" id="historyArrow">▼</div>
+                </div>
+                <div class="history-content" id="historyContent">
+                    <div class="history-list" id="historyList">
+                        <!-- History items will be loaded here -->
+                        <div class="no-history">No test history available</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-icon">🔒</div>
+            <h2>Login Required</h2>
+            <p>Please login or sign up to take the dyslexia assessment test and access all features.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn primary" onclick="window.location.href='/login'">Login</button>
+                <button class="modal-btn secondary" onclick="closeLoginModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-left">
+            <button class="menu-btn" onclick="toggleSidebar()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="logo">
+                <span>Dyslexia Screnning</span>
+            </div>
+        </div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            
+            <!-- Auth Buttons (shown when not logged in) -->
+            <div class="auth-buttons" id="authButtons">
+                <button class="login-btn" onclick="window.location.href='/login'">Login</button>
+                <button class="login-btn" onclick="window.location.href='/signup'">Sign Up</button>
+            </div>
+
+            <!-- User Profile (shown when logged in) -->
+            <div class="user-profile" id="userProfile">
+                <div class="user-avatar" id="userAvatar" onclick="toggleDropdown()">
+                    U
+                </div>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="user-info">
+                        <div class="user-name" id="userName">User Name</div>
+                        <div class="user-email" id="userEmail">user@example.com</div>
+                    </div>
+                    <div class="dropdown-item" onclick="window.location.href='/test'">
+                        📝 Take Test
+                    </div>
+                    <div class="dropdown-item" onclick="logout()">
+                        🚪 Logout
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="content-center">
+            <h1>Welcome to Dyslexia Screnning</h1>
+            <p>
+                Modern healthcare with expert doctors and convenient scheduling. Your health 
+                is our priority—experience the future of clinics today.
+            </p>
+            <button class="get-started-btn" onclick="handleGetStarted()">
+                Get Started
+            </button>
+
+            <!-- Features Section -->
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-title">Spelling Correction</div>
+                    <div class="feature-text">Advanced AI-powered spelling assessment</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">Word Sense Test</div>
+                    <div class="feature-text">Comprehensive disambiguation analysis</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">3 Languages</div>
+                    <div class="feature-text">English, Hindi, and Kannada support</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- News Section -->
+    <section class="news-section">
+        <div class="news-container">
+            <div class="news-header">
+                <h2>Health News</h2>
+                <p>Stay updated with the latest health and medical news</p>
+            </div>
+            <div id="newsGrid" class="news-grid">
+                <div class="loading-spinner">Loading health news...</div>
+            </div>
+        </div>
+    </section>
+
+    <script type="module">
+        // Firebase Configuration
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+        import { getDatabase, ref, get, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAjNK9sUByYR6cJvuqmiZWvsd47cMKV_lU",
+            authDomain: "dyexdect.firebaseapp.com",
+            databaseURL: "https://dyexdect-default-rtdb.firebaseio.com",
+            projectId: "dyexdect",
+            storageBucket: "dyexdect.firebasestorage.app",
+            messagingSenderId: "749021614757",
+            appId: "1:749021614757:web:8c3b027d88010bc4dd334c",
+            measurementId: "G-5734WM4M2B"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        let isUserLoggedIn = false;
+        let currentUser = null;
+// Fetch Health News
+        async function fetchHealthNews() {
+            const newsGrid = document.getElementById('newsGrid');
+            const apiKey = '7202a329be564a458c833972a3df9330';
+            const url = `https://newsapi.org/v2/top-headlines?category=health&language=en&pageSize=20&apiKey=${apiKey}`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.status === 'ok' && data.articles && data.articles.length > 0) {
+                    newsGrid.innerHTML = '';
+                    
+                    // Determine how many articles to display: 8 if available, otherwise 4
+                    let articlesToShow = data.articles;
+                    if (data.articles.length >= 8) {
+                        articlesToShow = data.articles.slice(0, 8);
+                    } else {
+                        articlesToShow = data.articles.slice(0, 4);
+                    }
+                    
+                    articlesToShow.forEach((article, index) => {
+                        const newsCard = createNewsCard(article, index);
+                        newsGrid.appendChild(newsCard);
+                    });
+                } else {
+                    newsGrid.innerHTML = '<div class="news-error">No health news available at the moment.</div>';
+                }
+            } catch (error) {
+                console.error('Error fetching news:', error);
+                newsGrid.innerHTML = '<div class="news-error">Failed to load health news. Please try again later.</div>';
+            }
+        }
+
+        function createNewsCard(article, index) {
+            const card = document.createElement('div');
+            card.className = 'news-card';
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.onclick = () => window.open(article.url, '_blank');
+
+            const imageUrl = article.urlToImage || '';
+            const title = article.title || 'No title available';
+            const description = article.description || 'No description available';
+            const source = article.source?.name || 'Unknown source';
+            const publishedAt = article.publishedAt ? formatTimeAgo(new Date(article.publishedAt)) : '';
+
+            card.innerHTML = `
+                ${imageUrl ? `<img src="${imageUrl}" alt="${title}" class="news-image" onerror="this.style.display='none'">` : '<div class="news-image"></div>'}
+                <div class="news-content">
+                    <div class="news-title">${title}</div>
+                    <div class="news-description">${description}</div>
+                    <div class="news-meta">
+                        <span class="news-source">${source}</span>
+                        <span class="news-time">${publishedAt}</span>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function formatTimeAgo(date) {
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            
+            if (diffInSeconds < 3600) {
+                const minutes = Math.floor(diffInSeconds / 60);
+                return `${minutes} ${minutes === 1 ? 'min' : 'mins'} ago`;
+            } else if (diffInSeconds < 86400) {
+                const hours = Math.floor(diffInSeconds / 3600);
+                return `${hours} ${hours === 1 ? 'hr' : 'hrs'} ago`;
+            } else {
+                const days = Math.floor(diffInSeconds / 86400);
+                return `${days} ${days === 1 ? 'day' : 'days'} ago`;
+            }
+        }
+
+        // Load news on page load
+        fetchHealthNews();
+
+        // Navbar scroll effect and section detection
+        const navbar = document.getElementById('navbar');
+        const sidebar = document.getElementById('sidebar');
+        const newsSection = document.querySelector('.news-section');
+        
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const newsSectionTop = newsSection.offsetTop;
+            const newsSectionBottom = newsSectionTop + newsSection.offsetHeight;
+            
+            // Check if we're in the news section
+            if (scrollY + 100 >= newsSectionTop && scrollY < newsSectionBottom) {
+                navbar.classList.add('on-news-section');
+                navbar.classList.remove('scrolled');
+                sidebar.classList.add('on-news-section');
+            } else if (scrollY > 50) {
+                navbar.classList.add('scrolled');
+                navbar.classList.remove('on-news-section');
+                sidebar.classList.remove('on-news-section');
+            } else {
+                navbar.classList.remove('scrolled');
+                navbar.classList.remove('on-news-section');
+                sidebar.classList.remove('on-news-section');
+            }
+        });
+
+        // Check Firebase authentication status on page load
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in
+                isUserLoggedIn = true;
+                currentUser = user;
+                const userName = user.displayName || user.email.split('@')[0];
+                const userEmail = user.email;
+                showUserProfile({ name: userName, email: userEmail });
+                
+                // Show history section in sidebar
+                document.getElementById('historySection').classList.add('visible');
+                
+                // Load user's test history
+                loadTestHistory(user.uid);
+            } else {
+                // User is signed out
+                isUserLoggedIn = false;
+                currentUser = null;
+                showAuthButtons();
+                
+                // Hide history section in sidebar
+                document.getElementById('historySection').classList.remove('visible');
+            }
+        });
+
+        function showUserProfile(user) {
+            document.getElementById('authButtons').classList.add('hidden');
+            const userProfile = document.getElementById('userProfile');
+            userProfile.classList.add('active');
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userEmail').textContent = user.email;
+            const initial = user.name.charAt(0).toUpperCase();
+            document.getElementById('userAvatar').textContent = initial;
+        }
+
+        function showAuthButtons() {
+            document.getElementById('authButtons').classList.remove('hidden');
+            document.getElementById('userProfile').classList.remove('active');
+        }
+
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function toggleHistory() {
+            const historyContent = document.getElementById('historyContent');
+            const historyArrow = document.getElementById('historyArrow');
+            
+            historyContent.classList.toggle('expanded');
+            historyArrow.classList.toggle('expanded');
+        }
+
+        async function loadTestHistory(userId) {
+            try {
+                // Reference to user's test results
+                const testsRef = ref(database, `users/${userId}/tests`);
+                const testsQuery = query(testsRef, orderByChild('timestamp'), limitToLast(10));
+                
+                const snapshot = await get(testsQuery);
+                const historyList = document.getElementById('historyList');
+                
+                if (snapshot.exists()) {
+                    const tests = [];
+                    snapshot.forEach((childSnapshot) => {
+                        tests.push({
+                            id: childSnapshot.key,
+                            ...childSnapshot.val()
+                        });
+                    });
+                    
+                    // Reverse to show newest first
+                    tests.reverse();
+                    
+                    // Clear existing content
+                    historyList.innerHTML = '';
+                    
+                    // Create history items
+                    tests.forEach((test) => {
+                        const historyItem = createHistoryItem(test);
+                        historyList.appendChild(historyItem);
+                    });
+                } else {
+                    historyList.innerHTML = '<div class="no-history">No test history available</div>';
+                }
+            } catch (error) {
+                console.error('Error loading test history:', error);
+                document.getElementById('historyList').innerHTML = '<div class="no-history">Error loading history</div>';
+            }
+        }
+
+        function createHistoryItem(test) {
+            const item = document.createElement('div');
+            item.className = 'history-item';
+            item.onclick = () => viewTestDetails(test.id);
+            
+            const date = new Date(test.timestamp);
+            const formattedDate = date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric' 
+            });
+            
+            item.innerHTML = `
+                <div class="history-item-content">
+                    <div class="history-item-title">
+                        ${test.testType || 'Dyslexia Test'}
+                    </div>
+                    <div class="history-item-date">${formattedDate}</div>
+                    ${test.score !== undefined ? `<div class="history-item-score">Score: ${test.score}%</div>` : ''}
+                </div>
+            `;
+            
+            return item;
+        }
+
+        function viewTestDetails(testId) {
+            // Navigate to test details page
+            window.location.href = `/test-results?id=${testId}`;
+        }
+
+        function handleGetStarted() {
+            if (isUserLoggedIn) {
+                window.location.href = '/test';
+            } else {
+                document.getElementById('loginModal').classList.add('active');
+            }
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('active');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const userProfile = document.getElementById('userProfile');
+            const dropdown = document.getElementById('userDropdown');
+            
+            if (!userProfile.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('loginModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeLoginModal();
+            }
+        });
+
+        async function logout() {
+            try {
+                await signOut(auth);
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userName');
+                showAuthButtons();
+                alert('Logged out successfully!');
+            } catch (error) {
+                console.error('Logout failed:', error);
+                alert('Logout failed. Please try again.');
+            }
+        }
+
+        // Make functions globally available
+        window.toggleDropdown = toggleDropdown;
+        window.toggleSidebar = toggleSidebar;
+        window.toggleHistory = toggleHistory;
+        window.handleGetStarted = handleGetStarted;
+        window.closeLoginModal = closeLoginModal;
+        window.logout = logout;
+    </script>
+    <!-- Footer -->
+<footer class="app-footer">
+    <div class="footer-container">
+        <!-- Left -->
+        <div class="footer-left">
+            <div class="footer-logo">
+                <div class="logo-bars">
+                </div>
+                <span>Dyslexia Screnning</span>
+            </div>
+
+            <p class="footer-copy">
+                © 2026 Dyslexia Screnning SAS - All rights reserved.
+            </p>
+        </div>
+
+        <!-- Right -->
+        <div class="footer-links">
+            <div class="footer-col">
+                <h4>Dyslexia Screnning</h4>
+                <a href="#">Login</a>
+                <a href="#">Signup</a>
+            </div>
+
+            <div class="footer-col">
+                <h4>Company</h4>
+                <a href="#">Legals</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of service</a>
+                <a href="#">Contact</a>
+            </div>
+
+            <div class="footer-col">
+                <h4>Socials</h4>
+                <a href="#">Twitter</a>
+                <a href="#">GitHub</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

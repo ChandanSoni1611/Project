@@ -1,0 +1,7 @@
+models/
+dataset/
+*.joblib
+*.pkl
+*.h5
+__pycache__/
+.env

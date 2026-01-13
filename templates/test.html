@@ -1,0 +1,1058 @@
+<!--test.html-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dyslexia Assessment Test - Smile Clinic</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Navigation Bar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #1976d2;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #1976d2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .back-btn {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #1565c0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #1976d2;
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        /* Loading Overlay */
+        .page-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(227, 242, 253, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .page-loading.hidden {
+            display: none;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-spinner {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #1976d2;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .user-info {
+            background: #e3f2fd;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #bbdefb;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1976d2;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #bbdefb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1976d2;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 30px;
+            margin-top: 10px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .radio-option input[type="radio"] {
+            width: auto;
+            cursor: pointer;
+            transform: scale(1.3);
+            accent-color: #1976d2;
+        }
+
+        .radio-option label {
+            cursor: pointer;
+            font-weight: 500;
+            margin: 0;
+            color: #333;
+        }
+
+        .submit-btn {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
+        }
+
+        .submit-btn:hover {
+            background: #1565c0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
+        }
+
+        .test-section {
+            background: white;
+            border: 2px solid #e3f2fd;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            display: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .test-section.active {
+            display: block;
+        }
+
+        .test-section h2 {
+            color: #1976d2;
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #bbdefb;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #1976d2;
+        }
+
+        .btn-primary {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 15px;
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #1565c0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(25, 118, 210, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result.success {
+            background: #e8f5e9;
+            border: 2px solid #81c784;
+            color: #2e7d32;
+        }
+
+        .result.error {
+            background: #ffebee;
+            border: 2px solid #e57373;
+            color: #c62828;
+        }
+
+        .result-content {
+            margin-top: 10px;
+        }
+
+        .result-item {
+            margin: 10px 0;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+        }
+
+        .result-item strong {
+            display: inline-block;
+            min-width: 120px;
+            color: #1976d2;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1976d2;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .language-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            background: #1976d2;
+            color: white;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #1976d2;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .info-box p {
+            color: #1565c0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .warning-box h3 {
+            color: #e65100;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .warning-box p {
+            color: #e65100;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .error-message {
+            background: #ffebee;
+            border: 2px solid #e57373;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        .error-message h2 {
+            color: #c62828;
+            font-size: 28px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .error-message p {
+            color: #c62828;
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .error-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        /* Virtual Keyboard Styles */
+        .virtual-keyboard {
+            margin-top: 15px;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 12px;
+            display: none;
+            border: 2px solid #bbdefb;
+        }
+
+        .virtual-keyboard.active {
+            display: block;
+        }
+
+        .keyboard-title {
+            font-size: 14px;
+            color: #1976d2;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .keyboard-row {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .key {
+            background: white;
+            border: 2px solid #bbdefb;
+            border-radius: 8px;
+            padding: 10px 15px;
+            min-width: 45px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.2s;
+            user-select: none;
+            color: #1976d2;
+        }
+
+        .key:hover {
+            background: #1976d2;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+        }
+
+        .key:active {
+            transform: translateY(0);
+        }
+
+        .key.space {
+            min-width: 200px;
+        }
+
+        .key.special {
+            background: #bbdefb;
+            font-size: 14px;
+            min-width: 70px;
+            color: #1565c0;
+        }
+
+        .key.special:hover {
+            background: #2196f3;
+            color: white;
+        }
+
+        .keyboard-toggle {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .keyboard-toggle:hover {
+            background: #1565c0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(25, 118, 210, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 20px 30px;
+            }
+
+            .container {
+                padding: 25px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+
+            .key {
+                padding: 8px 10px;
+                min-width: 35px;
+                font-size: 14px;
+            }
+
+            .key.space {
+                min-width: 150px;
+            }
+
+            .key.special {
+                min-width: 55px;
+                font-size: 12px;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Loading Overlay -->
+    <div class="page-loading" id="pageLoading">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p style="color: #1976d2; font-size: 18px; font-weight: 600;">Loading Assessment Tool...</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="mainNav" style="display: none;">
+        <div class="logo">
+            <div class="logo-icon">⚕️</div>
+            <span>Smile Clinic</span>
+        </div>
+        <button class="back-btn" onclick="window.location.href='/'">← Back to Home</button>
+    </nav>
+
+    <div class="container" id="mainContainer" style="display: none;">
+        
+        <div class="header">
+            <h1>Dyslexia Assessment Test</h1>
+        </div>
+
+        <!-- User Information Section -->
+        <div class="user-info" id="userInfoSection">
+            <div class="warning-box">
+                <h3>⚠️ Important Notice</h3>
+                <p>This test requires normal vision, hearing, and speaking abilities. Please answer the following questions honestly before proceeding.</p>
+            </div>
+
+            <!-- Problem Check Section -->
+            <div class="form-group">
+                <label style="font-size: 18px; color: #d32f2f;">Do you have any of the following problems?</label>
+                <div style="margin-top: 15px; margin-bottom: 10px;">
+                    <div style="padding: 10px; background: #fff; border-radius: 5px; margin-bottom: 8px;">
+                        <strong>👁️ Eye Problem</strong> - Vision difficulties, cannot see clearly
+                    </div>
+                    <div style="padding: 10px; background: #fff; border-radius: 5px; margin-bottom: 8px;">
+                        <strong>👂 Ear Problem</strong> - Hearing difficulties, cannot hear properly
+                    </div>
+                    <div style="padding: 10px; background: #fff; border-radius: 5px; margin-bottom: 8px;">
+                        <strong>🗣️ Speaking Problem</strong> - Speech difficulties, trouble speaking
+                    </div>
+                </div>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="problemYes" name="hasProblem" value="yes">
+                        <label for="problemYes">Yes, I have one or more of these problems</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="problemNo" name="hasProblem" value="no">
+                        <label for="problemNo">No, I don't have any of these problems</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="age">Age (5-10 years)</label>
+                    <input type="number" id="age" min="5" max="10" placeholder="Enter age" required>
+                </div>
+                <div class="form-group">
+                    <label for="language">Select Language</label>
+                    <select id="language">
+                        <option value="english" selected>English</option>
+                        <option value="hindi">Hindi (हिंदी)</option>
+                        <option value="kannada">Kannada (ಕನ್ನಡ)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="submit-btn" onclick="validateAndStartTest()">
+                Submit & Start Test
+            </button>
+        </div>
+
+        <!-- Error Message for Problems -->
+        <div class="error-message" id="errorMessage">
+            <div class="error-icon">🚫</div>
+            <h2>Test Cannot Proceed</h2>
+            <p>We're sorry, but this dyslexia assessment test cannot be conducted if you have eye, ear, or speaking problems.</p>
+            <p><strong>Reason:</strong> The test requires normal vision to read text, normal hearing for audio instructions (if any), and normal speaking abilities for accurate assessment.</p>
+            <p style="margin-top: 20px;">Please consult with a healthcare professional or specialist who can provide appropriate assessment methods suited to your specific needs.</p>
+            <button class="back-btn" style="margin-top: 20px; display: inline-block;" onclick="window.location.href='/'">Return to Home</button>
+        </div>
+
+        <!-- Test Sections Container -->
+        <div id="testContainer">
+            <!-- Spelling Correction Test -->
+            <div class="test-section" id="spellingSection">
+                <h2>
+                    <span>✍️</span> Spelling Correction Test
+                    <span class="language-badge" id="spellingLangBadge">English</span>
+                </h2>
+                
+                <div class="form-group">
+                    <label for="spellingInput">Enter text with spelling errors:</label>
+                    <textarea id="spellingInput" placeholder="Example: The qwick brown fox jumps ovr the lazi dog"></textarea>
+                    <button class="keyboard-toggle" onclick="toggleKeyboard('spelling')">
+                        Show/Hide Keyboard ⌨️
+                    </button>
+                </div>
+
+                <!-- Virtual Keyboard for Spelling -->
+                <div class="virtual-keyboard" id="spellingKeyboard">
+                    <div class="keyboard-title">Virtual Keyboard</div>
+                    <div id="spellingKeyboardContent"></div>
+                </div>
+
+                <button class="btn-primary" onclick="testSpelling()" id="spellingBtn">
+                    Correct Spelling
+                </button>
+
+                <div class="loading" id="spellingLoading">
+                    <div class="spinner"></div>
+                    <p>Processing spelling correction...</p>
+                </div>
+
+                <div class="result" id="spellingResult">
+                    <strong>Result:</strong>
+                    <div class="result-content" id="spellingResultContent"></div>
+                </div>
+            </div>
+
+            <!-- Word Sense Disambiguation (Confusion) Test -->
+            <div class="test-section" id="wsdSection">
+                <h2>
+                    <span>🧠</span> Word Sense Disambiguation Test
+                    <span class="language-badge" id="wsdLangBadge">English</span>
+                </h2>
+                
+                <div class="form-group">
+                    <label for="contextInput">Context Sentence:</label>
+                    <textarea id="contextInput" placeholder="Example: The bank is closed on Sundays"></textarea>
+                    <button class="keyboard-toggle" onclick="toggleKeyboard('context')">
+                        Show/Hide Keyboard ⌨️
+                    </button>
+                </div>
+
+                <!-- Virtual Keyboard for Context -->
+                <div class="virtual-keyboard" id="contextKeyboard">
+                    <div class="keyboard-title">Virtual Keyboard</div>
+                    <div id="contextKeyboardContent"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="glossInput">Word Definition/Gloss:</label>
+                    <textarea id="glossInput" placeholder="Example: A financial institution"></textarea>
+                    <button class="keyboard-toggle" onclick="toggleKeyboard('gloss')">
+                        Show/Hide Keyboard ⌨️
+                    </button>
+                </div>
+
+                <!-- Virtual Keyboard for Gloss -->
+                <div class="virtual-keyboard" id="glossKeyboard">
+                    <div class="keyboard-title">Virtual Keyboard</div>
+                    <div id="glossKeyboardContent"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="targetWordInput">Target Word:</label>
+                    <input type="text" id="targetWordInput" placeholder="Example: bank">
+                    <button class="keyboard-toggle" onclick="toggleKeyboard('target')">
+                        Show/Hide Keyboard ⌨️
+                    </button>
+                </div>
+
+                <!-- Virtual Keyboard for Target Word -->
+                <div class="virtual-keyboard" id="targetKeyboard">
+                    <div class="keyboard-title">Virtual Keyboard</div>
+                    <div id="targetKeyboardContent"></div>
+                </div>
+
+                <button class="btn-primary" onclick="testWordSense()" id="wsdBtn">
+                    Test Word Sense
+                </button>
+
+                <div class="loading" id="wsdLoading">
+                    <div class="spinner"></div>
+                    <p>Processing word sense disambiguation...</p>
+                </div>
+
+                <div class="result" id="wsdResult">
+                    <strong>Result:</strong>
+                    <div class="result-content" id="wsdResultContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Keyboard layouts for different languages
+        const keyboards = {
+            english: [
+                ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+                ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+                ['Z', 'X', 'C', 'V', 'B', 'N', 'M'],
+                ['Space', 'Backspace', 'Clear']
+            ],
+            hindi: [
+                ['अ', 'आ', 'इ', 'ई', 'उ', 'ऊ', 'ए', 'ऐ', 'ओ', 'औ'],
+                ['क', 'ख', 'ग', 'घ', 'ङ', 'च', 'छ', 'ज', 'झ', 'ञ'],
+                ['ट', 'ठ', 'ड', 'ढ', 'ण', 'त', 'थ', 'द', 'ध', 'न'],
+                ['प', 'फ', 'ब', 'भ', 'म', 'य', 'र', 'ल', 'व'],
+                ['श', 'ष', 'स', 'ह', 'क्ष', 'त्र', 'ज्ञ'],
+                ['ा', 'ि', 'ी', 'ु', 'ू', 'े', 'ै', 'ो', 'ौ', '्'],
+                ['Space', 'Backspace', 'Clear']
+            ],
+            kannada: [
+                ['ಅ', 'ಆ', 'ಇ', 'ಈ', 'ಉ', 'ಊ', 'ಋ', 'ಎ', 'ಏ', 'ಐ'],
+                ['ಒ', 'ಓ', 'ಔ', 'ಕ', 'ಖ', 'ಗ', 'ಘ', 'ಙ', 'ಚ', 'ಛ'],
+                ['ಜ', 'ಝ', 'ಞ', 'ಟ', 'ಠ', 'ಡ', 'ಢ', 'ಣ', 'ತ', 'ಥ'],
+                ['ದ', 'ಧ', 'ನ', 'ಪ', 'ಫ', 'ಬ', 'ಭ', 'ಮ', 'ಯ', 'ರ'],
+                ['ಲ', 'ವ', 'ಶ', 'ಷ', 'ಸ', 'ಹ', 'ಳ', 'ೞ', 'ಱ'],
+                ['ಾ', 'ಿ', 'ೀ', 'ು', 'ೂ', 'ೃ', 'ೆ', 'ೇ', 'ೈ', 'ೊ'],
+                ['ೋ', 'ೌ', '್', 'ಂ', 'ಃ'],
+                ['Space', 'Backspace', 'Clear']
+            ]
+        };
+
+        let currentLanguage = 'english';
+        let testStarted = false;
+
+        // Hide loading screen and show content when page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                document.getElementById('pageLoading').classList.add('hidden');
+                document.getElementById('mainNav').style.display = 'flex';
+                document.getElementById('mainContainer').style.display = 'block';
+                // Initialize keyboards
+                updateAllKeyboards();
+            }, 500);
+        });
+
+        // Update language badges and keyboards when language changes
+        document.getElementById('language').addEventListener('change', function() {
+            currentLanguage = this.value;
+            const displayName = this.options[this.selectedIndex].text;
+            
+            document.getElementById('spellingLangBadge').textContent = displayName;
+            document.getElementById('wsdLangBadge').textContent = displayName;
+            
+            // Update all keyboards with new language
+            updateAllKeyboards();
+            clearResults();
+        });
+
+        function updateAllKeyboards() {
+            createKeyboard('spellingKeyboardContent', 'spellingInput');
+            createKeyboard('contextKeyboardContent', 'contextInput');
+            createKeyboard('glossKeyboardContent', 'glossInput');
+            createKeyboard('targetKeyboardContent', 'targetWordInput');
+        }
+
+        function createKeyboard(containerId, inputId) {
+            const container = document.getElementById(containerId);
+            const layout = keyboards[currentLanguage];
+            
+            container.innerHTML = '';
+            
+            layout.forEach(row => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'keyboard-row';
+                
+                row.forEach(key => {
+                    const keyBtn = document.createElement('button');
+                    keyBtn.className = 'key';
+                    keyBtn.type = 'button';
+                    
+                    if (key === 'Space' || key === 'Backspace' || key === 'Clear') {
+                        keyBtn.classList.add('special');
+                        if (key === 'Space') keyBtn.classList.add('space');
+                    }
+                    
+                    keyBtn.textContent = key;
+                    keyBtn.onclick = () => handleKeyPress(key, inputId);
+                    
+                    rowDiv.appendChild(keyBtn);
+                });
+                
+                container.appendChild(rowDiv);
+            });
+        }
+
+        function handleKeyPress(key, inputId) {
+            const input = document.getElementById(inputId);
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const text = input.value;
+            
+            if (key === 'Space') {
+                input.value = text.substring(0, start) + ' ' + text.substring(end);
+                input.selectionStart = input.selectionEnd = start + 1;
+            } else if (key === 'Backspace') {
+                if (start > 0) {
+                    input.value = text.substring(0, start - 1) + text.substring(end);
+                    input.selectionStart = input.selectionEnd = start - 1;
+                }
+            } else if (key === 'Clear') {
+                input.value = '';
+            } else {
+                input.value = text.substring(0, start) + key + text.substring(end);
+                input.selectionStart = input.selectionEnd = start + key.length;
+            }
+            
+            input.focus();
+        }
+
+        function toggleKeyboard(type) {
+            const keyboardMap = {
+                'spelling': 'spellingKeyboard',
+                'context': 'contextKeyboard',
+                'gloss': 'glossKeyboard',
+                'target': 'targetKeyboard'
+            };
+            
+            const keyboardId = keyboardMap[type];
+            const keyboard = document.getElementById(keyboardId);
+            
+            if (keyboard.classList.contains('active')) {
+                keyboard.classList.remove('active');
+            } else {
+                keyboard.classList.add('active');
+            }
+        }
+
+        function validateAndStartTest() {
+            // Check if problem radio is selected
+            const problemRadio = document.querySelector('input[name="hasProblem"]:checked');
+            if (!problemRadio) {
+                alert('Please select whether you have any eye, ear, or speaking problems');
+                return;
+            }
+
+            // Check if user has problems
+            if (problemRadio.value === 'yes') {
+                // Hide user info section and show error message
+                document.getElementById('userInfoSection').style.display = 'none';
+                document.getElementById('errorMessage').classList.add('active');
+                document.getElementById('testContainer').style.display = 'none';
+                return;
+            }
+
+            // Validate age
+            const age = parseInt(document.getElementById('age').value);
+            if (!age || age < 5 || age > 10) {
+                alert('Please enter a valid age between 5 and 10 years');
+                return;
+            }
+
+            // All validation passed - start the test
+            document.getElementById('userInfoSection').style.display = 'none';
+            document.getElementById('errorMessage').classList.remove('active');
+            document.getElementById('spellingSection').classList.add('active');
+            document.getElementById('wsdSection').classList.add('active');
+            testStarted = true;
+            
+            // Update keyboards after test starts
+            updateAllKeyboards();
+        }
+
+        function clearResults() {
+            document.getElementById('spellingResult').style.display = 'none';
+            document.getElementById('wsdResult').style.display = 'none';
+        }
+
+        async function testSpelling() {
+            if (!testStarted) {
+                alert('Please complete the initial form first');
+                return;
+            }
+
+            const text = document.getElementById('spellingInput').value.trim();
+            const language = document.getElementById('language').value;
+
+            if (!text) {
+                alert('Please enter some text to correct');
+                return;
+            }
+
+            const btn = document.getElementById('spellingBtn');
+            const loading = document.getElementById('spellingLoading');
+            const result = document.getElementById('spellingResult');
+
+            btn.disabled = true;
+            loading.style.display = 'block';
+            result.style.display = 'none';
+
+            try {
+                const response = await fetch('http://localhost:5000/correct_spelling', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        text: text,
+                        language: language
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    showResult('spellingResult', 'error', data.error);
+                } else {
+                    const content = `
+                        <div class="result-item">
+                            <strong>Original:</strong> ${data.original}
+                        </div>
+                        <div class="result-item">
+                            <strong>Corrected:</strong> ${data.corrected}
+                        </div>
+                        <div class="result-item">
+                            <strong>Language:</strong> ${data.language.charAt(0).toUpperCase() + data.language.slice(1)}
+                        </div>
+                    `;
+                    showResult('spellingResult', 'success', content);
+                }
+            } catch (error) {
+                showResult('spellingResult', 'error', 'Error: ' + error.message + '<br>Make sure the Flask server is running on http://localhost:5000');
+            } finally {
+                btn.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+
+        async function testWordSense() {
+            if (!testStarted) {
+                alert('Please complete the initial form first');
+                return;
+            }
+
+            const context = document.getElementById('contextInput').value.trim();
+            const gloss = document.getElementById('glossInput').value.trim();
+            const targetWord = document.getElementById('targetWordInput').value.trim();
+            const language = document.getElementById('language').value;
+
+            if (!context || !gloss || !targetWord) {
+                alert('Please fill in all fields (context, gloss, and target word)');
+                return;
+            }
+
+            const btn = document.getElementById('wsdBtn');
+            const loading = document.getElementById('wsdLoading');
+            const result = document.getElementById('wsdResult');
+
+            btn.disabled = true;
+            loading.style.display = 'block';
+            result.style.display = 'none';
+
+            try {
+                const response = await fetch('http://localhost:5000/confusion_test', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        context: context,
+                        gloss: gloss,
+                        target_word: targetWord,
+                        language: language
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    showResult('wsdResult', 'error', data.error);
+                } else {
+                    const content = `
+                        <div class="result-item">
+                            <strong>Context:</strong> ${data.context}
+                        </div>
+                        <div class="result-item">
+                            <strong>Gloss:</strong> ${data.gloss}
+                        </div>
+                        <div class="result-item">
+                            <strong>Target Word:</strong> ${data.target_word}
+                        </div>
+                        <div class="result-item">
+                            <strong>Prediction:</strong> ${data.prediction}
+                        </div>
+                        <div class="result-item">
+                            <strong>Confidence:</strong> ${(data.confidence * 100).toFixed(2)}%
+                        </div>
+                        <div class="result-item">
+                            <strong>Language:</strong> ${data.language.charAt(0).toUpperCase() + data.language.slice(1)}
+                        </div>
+                    `;
+                    showResult('wsdResult', 'success', content);
+                }
+            } catch (error) {
+                showResult('wsdResult', 'error', 'Error: ' + error.message + '<br>Make sure the Flask server is running on http://localhost:5000');
+            } finally {
+                btn.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+
+        function showResult(elementId, type, content) {
+            const resultDiv = document.getElementById(elementId);
+            const resultContent = document.getElementById(elementId + 'Content');
+            
+            resultDiv.className = 'result ' + type;
+            resultContent.innerHTML = content;
+            resultDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
