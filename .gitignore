@@ -4,4 +4,5 @@ dataset/
 *.pkl
 *.h5
 __pycache__/
-.env
+.en
+v
