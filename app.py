@@ -9,22 +9,100 @@ import torch.nn as nn
 import json
 import string
 import os
+import sys
 from transformers import AutoTokenizer, AutoModel, BertTokenizer, BertModel
 import assemblyai as aai
 from difflib import SequenceMatcher
 
+# =========================
+# ⚠️ DOWNLOAD MODELS FIRST - BEFORE ANYTHING ELSE
+# =========================
+def download_and_extract_models():
+    """Downloads models from Google Drive if not present"""
+    models_exist = os.path.exists("models") and os.path.isdir("models")
+    dataset_exist = os.path.exists("dataset") and os.path.isdir("dataset")
+    
+    if models_exist and dataset_exist:
+        print("✅ Models and dataset folders already exist. Skipping download.")
+        return True
+    
+    print("="*60)
+    print("📥 Models/Dataset not found on server.")
+    print("📥 Starting download from Google Drive...")
+    print("="*60)
+    
+    try:
+        import subprocess
+        print("Installing gdown...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", "gdown"])
+        import gdown
+        
+        # REPLACE THIS WITH YOUR ACTUAL GOOGLE DRIVE FILE ID
+        GOOGLE_DRIVE_FILE_ID = "YOUR_GOOGLE_DRIVE_FILE_ID_HERE"
+        
+        zip_filename = "models_dataset.zip"
+        print(f"⬇️  Downloading from Google Drive...")
+        print(f"   File size: ~2.2 GB")
+        print(f"   This may take 5-10 minutes on Render's server...")
+        
+        download_url = f"https://drive.google.com/uc?id={GOOGLE_DRIVE_FILE_ID}"
+        gdown.download(download_url, zip_filename, quiet=False)
+        
+        print("✅ Download complete!")
+        print("📦 Extracting files...")
+        
+        import zipfile
+        with zipfile.ZipFile(zip_filename, 'r') as zip_ref:
+            zip_ref.extractall('.')
+        
+        print("✅ Extraction complete!")
+        print("🗑️  Cleaning up zip file...")
+        os.remove(zip_filename)
+        
+        print("="*60)
+        print("✅ Models and dataset successfully downloaded!")
+        print("="*60)
+        return True
+        
+    except Exception as e:
+        print("="*60)
+        print(f"❌ Error downloading models: {str(e)}")
+        print("="*60)
+        print("⚠️  Please check:")
+        print("   1. Your Google Drive file ID is correct")
+        print("   2. The file is set to 'Anyone with the link can view'")
+        print("   3. The file exists and is accessible")
+        print("="*60)
+        return False
+
+# RUN DOWNLOAD CHECK NOW (before creating Flask app or loading models)
+print("\n🚀 Starting application...")
+print("🔍 Checking for models and dataset...\n")
+
+if not download_and_extract_models():
+    print("\n❌ CRITICAL ERROR: Failed to load models.")
+    print("❌ Application cannot start without models.")
+    print("❌ Exiting...\n")
+    sys.exit(1)
+
+print("\n✅ Models check complete!")
+print("✅ Initializing Flask application...\n")
+
+# =========================
+# NOW CREATE FLASK APP AND LOAD MODELS
+# =========================
 app = Flask(__name__)
 
-# -------------------------
 # Device Setup
-# -------------------------
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Using device:", device)
+
+# ... REST OF YOUR CODE (exactly as it is now) ...
 
 # -------------------------
 # ⚠️ UPDATE THESE PATHS TO MATCH YOUR LOCAL FILE SYSTEM
 # -------------------------
-BASE_PATH = r"C:\Users\World\Desktop\dyslexia"
+BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 DATASET_PATH = os.path.join(BASE_PATH, "dataset", "spelling dataset")
 
 # Spelling Correction Configs
@@ -229,7 +307,7 @@ class ImprovedBERTForWSD(nn.Module):
         super(ImprovedBERTForWSD, self).__init__()
         self.bert = BertModel.from_pretrained('bert-base-uncased')
         
-        for param in self.bert.embeddings.parameters():
+        for param in self.bert.embeddings.parameters() :
             param.requires_grad = False
         
         self.dropout1 = nn.Dropout(dropout_rate)
@@ -622,13 +700,17 @@ def health():
 # -------------------------
 # Run App (LOCAL)
 # -------------------------
-if __name__ == '__main__':
-    print("\n" + "="*60)
-    print("🚀 Flask App Starting...")
-    print("="*60)
-    print("\n📍 Available Endpoints:")
-    print("  • POST /correct_spelling - Spelling correction")
-    print("  • POST /confusion_test - Word sense disambiguation")
-    print("  • GET  /health - System status")
-    print("\n" + "="*60)
-    app.run(debug=True, port=5000)
+
+if __name__ != "__main__":
+    # This runs when imported by gunicorn/Flask
+    print("\n🚀 Starting application...")
+    print("🔍 Checking for models and dataset...\n")
+    
+    if not download_and_extract_models():
+        print("\n❌ CRITICAL ERROR: Failed to load models.")
+        print("❌ Application cannot start without models.")
+        print("❌ Exiting...\n")
+        sys.exit(1)
+    
+    print("\n✅ All models loaded successfully!")
+    print("✅ Starting Flask application...\n")
