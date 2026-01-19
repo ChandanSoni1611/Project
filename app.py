@@ -38,14 +38,14 @@ def download_and_extract_models():
         import gdown
         
         # REPLACE THIS WITH YOUR ACTUAL GOOGLE DRIVE FILE ID
-        GOOGLE_DRIVE_FILE_ID = "YOUR_GOOGLE_DRIVE_FILE_ID_HERE"
+        GOOGLE_DRIVE_FILE_ID = "1ddS-8RuZXGkpyVBM4yl6S8qec14Iij7S"
         
         zip_filename = "models_dataset.zip"
         print(f"⬇️  Downloading from Google Drive...")
         print(f"   File size: ~2.2 GB")
         print(f"   This may take 5-10 minutes on Render's server...")
         
-        download_url = f"https://drive.google.com/uc?id={1ddS-8RuZXGkpyVBM4yl6S8qec14Iij7S}"
+        download_url = f"https://drive.google.com/uc?id={GOOGLE_DRIVE_FILE_ID}"
         #https://drive.google.com/file/d/1ddS-8RuZXGkpyVBM4yl6S8qec14Iij7S/view?usp=sharing
         gdown.download(download_url, zip_filename, quiet=False)
         
