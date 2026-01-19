@@ -1,8 +1,33 @@
+# Large model and dataset folders
 models/
 dataset/
+
+# Model files
 *.joblib
 *.pkl
 *.h5
+*.pt
+*.pth
+*.onnx
+*.bin
+
+# Python cache
 __pycache__/
-.en
-v
+*.pyc
+*.pyo
+
+# Virtual environment
+venv/
+env/
+.env
+
+# ZIP files (downloaded models)
+*.zip
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

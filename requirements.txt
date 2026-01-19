@@ -1,0 +1,81 @@
+flask==3.0.0
+torch==2.1.0
+torchvision==0.16.0
+transformers==4.35.0
+assemblyai==0.20.0
+gdown==4.7.1
+gunicorn==21.2.0
+```
+
+5. Save (Ctrl+S)
+
+---
+
+## 📄 **3. Create `Procfile`**
+
+This tells Render how to start your app.
+
+**Steps:**
+1. In VS Code, **right-click** on the `DYSLEXIA` folder
+2. Click **"New File"**
+3. Name it: `Procfile` (**NO extension**, just `Procfile`, not `Procfile.txt`)
+4. Paste this **single line**:
+```
+web: gunicorn app:app
+```
+
+5. Save (Ctrl+S)
+
+---
+
+## 🔍 **Important: Verify File Names**
+
+After creating, your folder should look like this:
+```
+DYSLEXIA/
+├── app.py
+├── requirements.txt     ← New file (with .txt extension)
+├── Procfile             ← New file (NO extension!)
+├── .gitignore           ← Updated
+├── templates/
+├── static/
+├── models/              ← Not pushed to GitHub
+└── dataset/             ← Not pushed to GitHub
+```
+
+---
+
+## ⚠️ **Common Mistakes to Avoid:**
+
+### ❌ **Wrong:** `Procfile.txt`
+### ✅ **Correct:** `Procfile` (no extension)
+
+To create `Procfile` without extension in VS Code:
+1. Create new file
+2. Type exactly: `Procfile`
+3. If Windows adds `.txt`, rename it and remove the extension
+
+---
+
+## 📋 **Quick Checklist:**
+
+- [ ] `.gitignore` updated with the code above
+- [ ] `requirements.txt` created with the packages listed
+- [ ] `Procfile` created (no extension) with `web: gunicorn app:app`
+- [ ] All files are in the **root folder** (same level as `app.py`)
+
+---
+
+## 🎯 **Visual Structure:**
+```
+VS Code Explorer should show:
+
+📁 DYSLEXIA
+  📄 app.py
+  📄 requirements.txt    ← YOU CREATED THIS
+  📄 Procfile            ← YOU CREATED THIS (no icon extension)
+  📄 .gitignore          ← YOU UPDATED THIS
+  📁 templates
+  📁 static
+  📁 models (grayed out - ignored by git)
+  📁 dataset (grayed out - ignored by git)
