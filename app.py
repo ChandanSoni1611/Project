@@ -134,17 +134,17 @@ SPELLING_CONFIGS = {
 # WSD (Confusion) Configs
 WSD_CONFIGS = {
     'english': {
-        'model_path': os.path.join(BASE_PATH, "models", "wsd_models", "english_model", "best_wsd_model_improved.pt"),
+        'model_path': os.path.join(BASE_PATH, "models", "confusion models", "best_wsd_model_improved.pt"),
         'model_name': 'bert-base-uncased',
         'tokenizer_type': 'bert'
     },
     'hindi': {
-        'model_path': os.path.join(BASE_PATH, "models", "wsd_models", "hindi_model", "best_hindi_wsd_model.pt"),
+        'model_path': os.path.join(BASE_PATH, "models", "confusion models", "best_hindi_wsd_model.pt"),
         'model_name': 'google/muril-base-cased',
         'tokenizer_type': 'muril'
     },
     'kannada': {
-        'model_path': os.path.join(BASE_PATH, "models", "wsd_models", "kannada_model", "best_kannada_wsd_model.pt"),
+        'model_path': os.path.join(BASE_PATH, "models", "confusion models", "best_kannada_wsd_model.pt"),
         'model_name': 'google/muril-base-cased',
         'tokenizer_type': 'muril'
     }
