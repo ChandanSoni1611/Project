@@ -47,7 +47,7 @@ def download_and_extract_models():
         
         download_url = f"https://drive.google.com/uc?id={GOOGLE_DRIVE_FILE_ID}"
         #https://drive.google.com/file/d/1ddS-8RuZXGkpyVBM4yl6S8qec14Iij7S/view?usp=sharing
-        gdown.download(download_url, zip_filename, quiet=False)
+        gdown.download(download_url, zip_filename, quiet=False, fuzzy=True)
         
         print("✅ Download complete!")
         print("📦 Extracting files...")
@@ -698,20 +698,3 @@ def health():
         "assemblyai": "configured" if ASSEMBLYAI_API_KEY else "not configured"
     })
 
-# -------------------------
-# Run App (LOCAL)
-# -------------------------
-
-if __name__ != "__main__":
-    # This runs when imported by gunicorn/Flask
-    print("\n🚀 Starting application...")
-    print("🔍 Checking for models and dataset...\n")
-    
-    if not download_and_extract_models():
-        print("\n❌ CRITICAL ERROR: Failed to load models.")
-        print("❌ Application cannot start without models.")
-        print("❌ Exiting...\n")
-        sys.exit(1)
-    
-    print("\n✅ All models loaded successfully!")
-    print("✅ Starting Flask application...\n")
