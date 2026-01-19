@@ -23,31 +23,33 @@ def download_and_extract_models():
     dataset_exist = os.path.exists("dataset") and os.path.isdir("dataset")
     
     if models_exist and dataset_exist:
-        print("✅ Models and dataset folders already exist. Skipping download.")
+        print("✅ Models and dataset folders already exist.")
         return True
     
-    print("="*60)
-    print("📥 Models/Dataset not found on server.")
-    print("📥 Starting download from Google Drive...")
-    print("="*60)
+    print("📥 Downloading models from Google Drive...")
     
     try:
         import subprocess
-        print("Installing gdown...")
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", "gdown"])
-        import gdown
         
-        # REPLACE THIS WITH YOUR ACTUAL GOOGLE DRIVE FILE ID
         GOOGLE_DRIVE_FILE_ID = "1ddS-8RuZXGkpyVBM4yl6S8qec14Iij7S"
-        
         zip_filename = "models_dataset.zip"
-        print(f"⬇️  Downloading from Google Drive...")
-        print(f"   File size: ~2.2 GB")
-        print(f"   This may take 5-10 minutes on Render's server...")
         
-        download_url = f"https://drive.google.com/uc?id={GOOGLE_DRIVE_FILE_ID}"
-        #https://drive.google.com/file/d/1ddS-8RuZXGkpyVBM4yl6S8qec14Iij7S/view?usp=sharing
-        gdown.download(download_url, zip_filename, quiet=False, fuzzy=True)
+        # Method 1: Try gdown first
+        try:
+            print("Trying gdown...")
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", "gdown"])
+            import gdown
+            url = f"https://drive.google.com/uc?id={GOOGLE_DRIVE_FILE_ID}"
+            gdown.download(url, zip_filename, quiet=False, fuzzy=True)
+        except:
+            # Method 2: Fall back to wget
+            print("gdown failed. Trying wget...")
+            url = f"https://drive.google.com/uc?export=download&id={GOOGLE_DRIVE_FILE_ID}"
+            subprocess.check_call(["wget", "--no-check-certificate", "-O", zip_filename, url])
+        
+        if not os.path.exists(zip_filename):
+            print("❌ Download failed")
+            return False
         
         print("✅ Download complete!")
         print("📦 Extracting files...")
@@ -56,6 +58,15 @@ def download_and_extract_models():
         with zipfile.ZipFile(zip_filename, 'r') as zip_ref:
             zip_ref.extractall('.')
         
+        os.remove(zip_filename)
+        print("✅ Setup complete!")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        import traceback
+        traceback.print_exc()
+        return False        
         print("✅ Extraction complete!")
         print("🗑️  Cleaning up zip file...")
         os.remove(zip_filename)
