@@ -17,84 +17,58 @@ from difflib import SequenceMatcher
 # =========================
 # ⚠️ DOWNLOAD MODELS FIRST - BEFORE ANYTHING ELSE
 # =========================
+
 def download_and_extract_models():
-    """Downloads models from Google Drive if not present"""
     models_exist = os.path.exists("models") and os.path.isdir("models")
     dataset_exist = os.path.exists("dataset") and os.path.isdir("dataset")
-    
+
     if models_exist and dataset_exist:
-        print("✅ Models and dataset folders already exist.")
+        print("✅ Models and dataset already present.")
         return True
-    
-    print("📥 Downloading models from Google Drive...")
-    
+
+    print("📥 Downloading models from Hugging Face...")
+
     try:
         import subprocess
-        
-        GOOGLE_DRIVE_FILE_ID = "1ddS-8RuZXGkpyVBM4yl6S8qec14Iij7S"
-        zip_filename = "models_dataset.zip"
-        
-        # Method 1: Try gdown first
-        try:
-            print("Trying gdown...")
-            subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", "gdown"])
-            import gdown
-            url = f"https://drive.google.com/uc?id={GOOGLE_DRIVE_FILE_ID}"
-            gdown.download(url, zip_filename, quiet=False, fuzzy=True)
-        except:
-            # Method 2: Fall back to wget
-            print("gdown failed. Trying wget...")
-            url = f"https://drive.google.com/uc?export=download&id={GOOGLE_DRIVE_FILE_ID}"
-            subprocess.check_call(["wget", "--no-check-certificate", "-O", zip_filename, url])
-        
-        if not os.path.exists(zip_filename):
-            print("❌ Download failed")
-            return False
-        
-        print("✅ Download complete!")
-        print("📦 Extracting files...")
-        
         import zipfile
-        with zipfile.ZipFile(zip_filename, 'r') as zip_ref:
-            zip_ref.extractall('.')
-        
-        os.remove(zip_filename)
-        print("✅ Setup complete!")
+
+        ZIP_NAME = "models_dataset.zip"
+        HF_URL = (
+            "https://huggingface.co/datasets/glitch123py/model_dataset"
+            "/resolve/main/models_dataset.zip"
+        )
+
+        # Download using wget (HF supports large files properly)
+        subprocess.check_call([
+            "wget",
+            "-O",
+            ZIP_NAME,
+            HF_URL
+        ])
+
+        if not os.path.exists(ZIP_NAME):
+            print("❌ Download failed: zip not found")
+            return False
+
+        print("📦 Extracting models...")
+        with zipfile.ZipFile(ZIP_NAME, "r") as zip_ref:
+            zip_ref.extractall(".")
+
+        os.remove(ZIP_NAME)
+        print("✅ Models extracted successfully")
         return True
-        
+
     except Exception as e:
-        print(f"❌ Error: {e}")
-        import traceback
-        traceback.print_exc()
-        return False        
-        print("✅ Extraction complete!")
-        print("🗑️  Cleaning up zip file...")
-        os.remove(zip_filename)
-        
-        print("="*60)
-        print("✅ Models and dataset successfully downloaded!")
-        print("="*60)
-        return True
-        
-    except Exception as e:
-        print("="*60)
-        print(f"❌ Error downloading models: {str(e)}")
-        print("="*60)
-        print("⚠️  Please check:")
-        print("   1. Your Google Drive file ID is correct")
-        print("   2. The file is set to 'Anyone with the link can view'")
-        print("   3. The file exists and is accessible")
-        print("="*60)
+        print("❌ Error downloading models:", e)
         return False
+
 
 # RUN DOWNLOAD CHECK NOW (before creating Flask app or loading models)
 print("\n🚀 Starting application...")
 print("🔍 Checking for models and dataset...\n")
 
 if not download_and_extract_models():
-    print("\n❌ CRITICAL ERROR: Failed to load models.")
-    print("❌ Application cannot start without models.")
-    print("❌ Exiting...\n")
+    print("❌ CRITICAL ERROR: Models missing")
     sys.exit(1)
 
 print("\n✅ Models check complete!")
@@ -709,3 +683,5 @@ def health():
         "assemblyai": "configured" if ASSEMBLYAI_API_KEY else "not configured"
     })
 
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
